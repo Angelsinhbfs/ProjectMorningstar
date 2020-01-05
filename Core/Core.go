@@ -7,8 +7,8 @@ type Owner int
 const (
 	SYSTEM Owner = iota
 	SERVER
-	LOCAL
-	REMOTE
+	LOCAL_USER
+	REMOTE_USER
 )
 
 type Entity struct {
@@ -20,7 +20,7 @@ type Entity struct {
 type ComponentStore struct {
 	// add in a map for each type of component
 	Transforms    map[string]Transform
-	AudioSources  map[string]AudioClip
+	AudioClips    map[string]AudioClip
 	RigidBodies   map[string]RigidBody
 	MeshRenderers map[string]MeshRenderer
 }
@@ -29,6 +29,12 @@ type EntityStore struct {
 	Entities map[string]Entity
 }
 
+type Store struct {
+	Entities   EntityStore
+	Components ComponentStore
+}
+
 type System interface {
-	Simulate() error
+	Step() error
+	GatherComponents(ActiveIds []string) error
 }
